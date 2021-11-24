@@ -1,0 +1,23 @@
+{%- set translation_domain = false %}
+
+{% for action in value %}
+    {% if not action.is_granted is not same as('') or is_granted(action.is_granted) %}
+        <a
+            {% with { attr: action.attr|filter((v, k) => k != 'class' and k != 'title') } %}{{ block('attributes', 'form_div_layout.html.twig') }}{% endwith %}
+            class="{{ action.attr.class|default('btn btn-sm btn-outline-primary') }}"
+            href="{{ action.url }}"
+            {% if action.attr|length and action.attr.title is defined and action.attr.title is not null %}title="{{ action.attr.title|trans }}" data-toggle="tooltip"{% endif %}
+            {% if action.ui_action %}
+                {% if action.ui_action.name is not same as('') %}{{ constant('DG\\AdminBundle\\UIAction\\UIActionInterface::DATA_NAME') }}="{{ action.ui_action.name }}"{% endif %}
+                {% if action.ui_action.parameters is not empty %}{{ constant('DG\\AdminBundle\\UIAction\\UIActionInterface::DATA_PARAMETERS') }}="{{ action.ui_action.parameters|json_encode|e('html_attr') }}"{% endif %}
+            {% endif %}
+        >
+            {% if action.icon is not same as('') %}
+                <i class="{{ action.icon }}"></i>
+            {% endif %}
+            {% if action.text is not same as('') %}
+                {{ action.text }}
+            {% endif %}
+        </a>
+    {% endif %}
+{% endfor %}

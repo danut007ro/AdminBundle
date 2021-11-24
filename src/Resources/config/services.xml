@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services
+        https://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <defaults autowire="true" autoconfigure="true" public="false" />
+
+        <!-- Adapters -->
+        <service id="DG\AdminBundle\Adapter\ORMAdapter">
+            <argument type="service" key="$filterBuilderUpdater" id="lexik_form_filter.query_builder_updater" />
+        </service>
+        <service id="DG\AdminBundle\Adapter\DBALAdapter">
+            <argument type="service" key="$filterBuilderUpdater" id="lexik_form_filter.query_builder_updater" />
+        </service>
+
+        <!-- Formatters -->
+        <service id="DG\AdminBundle\Formatter\DatatableFormatter">
+            <argument type="abstract" key="$defaultOptions">default formatter options, defined in AdminExtension</argument>
+        </service>
+        <service id="DG\AdminBundle\Formatter\InlineFormatter">
+            <argument type="abstract" key="$defaultOptions">default formatter options, defined in AdminExtension</argument>
+        </service>
+
+        <!-- Columns -->
+        <service id="DG\AdminBundle\Column\ActionColumn" />
+        <service id="DG\AdminBundle\Column\BatchColumn" />
+        <service id="DG\AdminBundle\Column\DataloaderColumn" />
+        <service id="DG\AdminBundle\Column\IntlDateTimeColumn" />
+        <service id="DG\AdminBundle\Column\TwigBlockColumn" />
+        <service id="DG\AdminBundle\Column\TwigColumn" />
+        <service id="DG\AdminBundle\Column\TwigStringColumn" />
+
+        <!-- Batch actions -->
+        <service id="DG\AdminBundle\BatchAction\ExportCsvBatchAction" />
+        <service id="DG\AdminBundle\BatchAction\ExportXlsxBatchAction" />
+
+        <!-- Factory -->
+        <service id="DG\AdminBundle\Table\TableFactory" public="true">
+            <argument type="abstract" key="$defaultOptions">default table options, defined in AdminExtension</argument>
+            <argument type="service" key="$transformRowsService" id="dg_admin.table.transform_rows" on-invalid="null">default service for transforming rows</argument>
+            <argument type="service" key="$idExtractorService" id="dg_admin.table.id_extractor" on-invalid="null">default service for extracting id from rows</argument>
+            <argument type="service" key="$transformBatchService" id="dg_admin.table.transform_batch" on-invalid="null">default service for transforming batch</argument>
+        </service>
+
+        <!-- Support services -->
+        <service id="DG\AdminBundle\Maker\AdminMaker" />
+        <service id="DG\AdminBundle\DependencyInjection\Instantiator" />
+        <service id="DG\AdminBundle\TableHelper">
+            <argument type="abstract" key="$defaultFormatter">default table formatter, defined in AdminExtension</argument>
+        </service>
+        <service id="DG\AdminBundle\ControllerHelper" />
+        <service id="DG\AdminBundle\Twig\TwigExtension" />
+        <service id="DG\AdminBundle\DateFormat\DateFormats">
+            <argument type="abstract" key="$ranges">default date ranges, defined in AdminExtension</argument>
+            <argument type="abstract" key="$formats">default date formats, defined in AdminExtension</argument>
+        </service>
+        <service id="DG\AdminBundle\DateFormat\TranslationExtractor">
+            <tag name="translation.extractor" alias="dg_admin.date_format.translation_extractor" />
+        </service>
+
+        <!-- Forms -->
+        <service id="DG\AdminBundle\Form\Extension\AdminExtension" />
+        <service id="DG\AdminBundle\Form\Extension\ConditionizeExtension" />
+        <service id="DG\AdminBundle\Form\Extension\Select2Extension" />
+        <service id="DG\AdminBundle\Form\Type\Select2EntityType">
+            <argument type="service" key="$registry" id="doctrine" />
+        </service>
+        <service id="DG\AdminBundle\Form\Type\Select2TagsType">
+            <argument type="service" key="$choiceListFactory" id="form.choice_list_factory" />
+        </service>
+        <service id="DG\AdminBundle\Form\Type\DateRangePickerType" />
+    </services>
+</container>

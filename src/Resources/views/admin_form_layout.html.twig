@@ -1,0 +1,32 @@
+{% use 'bootstrap_4_layout.html.twig' %}
+
+{% block group_row %}
+    {% if title is not same as('') %}
+    <div class="{{ class|default('card card-default') }}">
+        <div class="card-header">
+            <h3 class="card-title">
+                {% if icon %}
+                    <i class="{{ icon }}"></i>
+                {% endif %}
+                {{ title|trans }}
+            </h3>
+            <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas {% if 'collapsed-card' in class %}fa-plus{% else %}fa-minus{% endif %}"></i>
+                </button>
+            </div>
+        </div>
+        <div class="card-body">
+    {% else %}
+        </div>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block row_row %}
+    {% if start %}
+        <div class="{{ class }}">
+    {% else %}
+        </div>
+    {% endif %}
+{% endblock %}

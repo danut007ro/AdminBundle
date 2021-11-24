@@ -1,0 +1,1 @@
+ {{ constant('DG\\AdminBundle\\UIAction\\UIActionInterface::DATA_NAME') }}="{{ name }}" {{ constant('DG\\AdminBundle\\UIAction\\UIActionInterface::DATA_PARAMETERS') }}="{{ parameters|json_encode|e('html_attr') }}" {% if disableAuto %}{{ constant('DG\\AdminBundle\\UIAction\\UIActionInterface::DATA_DISABLE_AUTO') }}=true{% endif %} {# Keep space at start and end #}

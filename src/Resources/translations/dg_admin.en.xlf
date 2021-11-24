@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file source-language="ro" target-language="en" datatype="plaintext" original="file.ext">
+    <header>
+      <tool tool-id="symfony" tool-name="Symfony"/>
+    </header>
+    <body>
+      <trans-unit id="VG67jrm" resname="Filters">
+        <source>Filters</source>
+        <target>Filters</target>
+      </trans-unit>
+      <trans-unit id="_oZlFlx" resname="Toggle filters">
+        <source>Toggle filters</source>
+        <target>Toggle filters</target>
+      </trans-unit>
+      <trans-unit id="2Aqxm37" resname="Apply filters">
+        <source>Apply filters</source>
+        <target>Apply filters</target>
+      </trans-unit>
+      <trans-unit id="MeOS0cA" resname="Apply">
+        <source>Apply</source>
+        <target>Apply</target>
+      </trans-unit>
+      <trans-unit id="EK_phID" resname="Reset filters">
+        <source>Reset filters</source>
+        <target>Reset filters</target>
+      </trans-unit>
+      <trans-unit id="2u52BrM" resname="Reset">
+        <source>Reset</source>
+        <target>Reset</target>
+      </trans-unit>
+      <trans-unit id="satJpv7" resname="More filters">
+        <source>More filters</source>
+        <target>More filters</target>
+      </trans-unit>
+      <trans-unit id="8yQkqzW" resname="Less filters">
+        <source>Less filters</source>
+        <target>Less filters</target>
+      </trans-unit>
+      <trans-unit id="ykBnBx." resname="Selection">
+        <source>Selection</source>
+        <target>Selection</target>
+      </trans-unit>
+      <trans-unit id="H8mjh2V" resname="Select all">
+        <source>Select all</source>
+        <target>Select all</target>
+      </trans-unit>
+      <trans-unit id="Qa.g5wQ" resname="Select none">
+        <source>Select none</source>
+        <target>Select none</target>
+      </trans-unit>
+      <trans-unit id="Mn12xIf" resname="Select current page">
+        <source>Select current page</source>
+        <target>Select current page</target>
+      </trans-unit>
+      <trans-unit id="g7EsIhb" resname="Clear">
+        <source>Clear</source>
+        <target>Clear</target>
+      </trans-unit>
+      <trans-unit id="IYGXaTQ" resname="From">
+        <source>From</source>
+        <target>From</target>
+      </trans-unit>
+      <trans-unit id="9LBu9tP" resname="To">
+        <source>To</source>
+        <target>To</target>
+      </trans-unit>
+      <trans-unit id="SUynj3N" resname="Custom">
+        <source>Custom</source>
+        <target>Custom</target>
+      </trans-unit>
+      <trans-unit id="54BBq1G" resname="Week">
+        <source>Week</source>
+        <target>Week</target>
+      </trans-unit>
+      <trans-unit id="GXZu1sy" resname="Cancel">
+        <source>Cancel</source>
+        <target>Cancel</target>
+      </trans-unit>
+      <trans-unit id="FQn1YfJ" resname="Save">
+        <source>Save</source>
+        <target>Save</target>
+      </trans-unit>
+      <trans-unit id="4tClSWj" resname="Delete">
+        <source>Delete</source>
+        <target>Delete</target>
+      </trans-unit>
+      <trans-unit id="VlM5vE0" resname="OK">
+        <source>OK</source>
+        <target>OK</target>
+      </trans-unit>
+      <trans-unit id="pSrOQg8" resname="All">
+        <source>All</source>
+        <target>All</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

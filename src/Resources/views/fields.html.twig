@@ -1,0 +1,16 @@
+{% block dg_admin_select2_entity_widget %}
+    {% apply spaceless %}
+        <select {{ block('widget_attributes') }}>
+            {% if value is iterable %}
+                {% if attr['data-allow-clear']|default and not attr['multiple']|default %}
+                    <option value=""></option>
+                {% endif %}
+                {% for id, label in value %}
+                    {% block dg_admin_select2_entity_widget_select_option %}
+                        <option value="{{ id }}" selected="selected">{{ label }}</option>
+                    {% endblock %}
+                {% endfor %}
+            {% endif %}
+        </select>
+    {% endapply %}
+{% endblock dg_admin_select2_entity_widget %}

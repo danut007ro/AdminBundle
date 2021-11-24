@@ -1,0 +1,13 @@
+{% block container_begin %}<div class="container-fluid" data-dg-admin-table="{{ {vars: formatter.vars, formatter: {type: formatter.name, name: formatter.tableName}}|json_encode|e('html_attr') }}">{% endblock container_begin %}
+    {% block container_header %}{% endblock container_header %}
+    {% block container_table %}
+        <div class="row">
+            <div class="col">
+                <div data-dg-admin-table-container>
+                    {% block container_table_content %}{% endblock container_table_content %}
+                </div>
+            </div>
+        </div>
+    {% endblock container_table %}
+    {% block container_footer %}{% endblock container_footer %}
+{% block container_end %}</div>{% endblock container_end %}

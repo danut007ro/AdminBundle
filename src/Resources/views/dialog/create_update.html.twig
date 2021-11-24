@@ -1,0 +1,17 @@
+{% extends '@DGAdmin/dialog/action.html.twig' %}
+
+{% set dialog_class = dialog_class|default('modal-xl') %}
+
+{% block header %}
+    {% form_theme form '@DGAdmin/form_create_update_layout.html.twig' %}
+    {{ form_start(form) }}
+    {{ parent() }}
+{% endblock header %}
+
+{% block body %}
+    {{ form_rest(form) }}
+{% endblock body %}
+
+{% block footer_content %}
+    <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> {{ 'Save'|trans([], 'dg_admin') }}</button>
+{% endblock %}

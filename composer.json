@@ -1,0 +1,53 @@
+{
+    "name": "danut007ro/admin-bundle",
+    "type": "symfony-bundle",
+    "description": "Bundle for creating admin",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Daniel Gorgan",
+            "email": "danut007ro@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^8.0",
+        "lexik/form-filter-bundle": "^6.1",
+        "symfony/doctrine-bridge": "^5.2",
+        "symfony/expression-language": "^5.2",
+        "symfony/form": "^5.2",
+        "symfony/routing": "^5.2",
+        "symfony/security-csrf": "^5.2",
+        "symfony/translation": "^5.2",
+        "symfony/twig-bundle": "^5.2"
+    },
+    "require-dev": {
+        "doctrine/orm": "^2.8",
+        "friendsofphp/php-cs-fixer": "^3.0",
+        "overblog/dataloader-bundle": "^0.5",
+        "phpstan/extension-installer": "^1.1",
+        "phpstan/phpstan-doctrine": "^0.12.33",
+        "phpstan/phpstan-symfony": "^0.12.32",
+        "phpunit/phpunit": "^9.5",
+        "portphp/csv": "^1.1",
+        "portphp/spreadsheet": "^1.0",
+        "symfony/maker-bundle": "^1.0",
+        "symfony/phpunit-bridge": "^5.2"
+    },
+    "suggest": {
+        "overblog/dataloader-bundle": "For using the PromiseColumn",
+        "portphp/csv": "For exporting as CSV using ExportCsvBatchAction",
+        "portphp/spreadsheet": "For exporting as XLS using ExportXlsxBatchAction"
+    },
+    "autoload": {
+        "psr-4": { "DG\\AdminBundle\\": "src/"}
+    },
+    "autoload-dev": {
+        "psr-4": { "Tests\\": "tests/"}
+    },
+    "scripts": {
+        "cs": "./vendor/bin/php-cs-fixer fix --diff --dry-run --allow-risky=yes",
+        "cs-fix": "./vendor/bin/php-cs-fixer fix --diff --allow-risky=yes",
+        "phpstan": "php -d memory_limit=-1 ./vendor/bin/phpstan analyse",
+        "tests": "./vendor/bin/phpunit"
+    }
+}

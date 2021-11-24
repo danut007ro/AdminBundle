@@ -1,0 +1,30 @@
+{% extends '@DGAdmin/formatter/formatter.html.twig' %}
+
+{% block container_table_content %}
+    <table class="{{ parameters.class|default('table table-bordered') }}">
+        <thead>
+        <tr>
+            {% set columns = formatter.table.columns %}
+            {% for column in columns %}
+                {% if column.visible %}
+                    <th>{{ column.label|trans }}</th>
+                {% endif %}
+            {% endfor %}
+        </tr>
+        </thead>
+        <tbody>
+            {% set rows = formatter.table.process(formatter.tableRequest) %}
+            {% if rows.totalCount > 0 %}
+                {% for row in rows.data %}
+                    <tr>
+                        {% for k, col in row %}
+                            {% if columns[k].visible %}
+                                <td>{{ col|raw }}</td>
+                            {% endif %}
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            {% endif %}
+        </tbody>
+    </table>
+{% endblock container_table_content %}

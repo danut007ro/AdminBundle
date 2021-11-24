@@ -1,0 +1,58 @@
+{% extends 'knp_menu.html.twig' %}
+
+{% set options = options|merge({
+    firstClass: null,
+    lastClass: null,
+    currentClass: null,
+    ancestorClass: 'menu-open',
+    branch_class: 'nav-item has-treeview',
+    leaf_class: 'nav-item'
+}) %}
+
+{% block list %}
+    {% if item.isRoot %}
+        {% set listAttributes = listAttributes|merge({
+            class: listAttributes.class|default('') ~ ' nav nav-pills nav-sidebar flex-column ',
+            'data-widget': 'treeview',
+            role: 'menu',
+            'data-accordion': 'false',
+        }) %}
+    {% else %}
+        {% set listAttributes = listAttributes|merge({
+            class: listAttributes.class|default('') ~ ' nav nav-treeview ',
+        }) %}
+    {% endif %}
+    {{ parent() }}
+{% endblock %}
+
+{% block linkElement %}
+    {% set class = ' nav-link ' %}
+    {% if matcher.isAncestor(item) or matcher.isCurrent(item) %}
+        {% set class = class ~ ' active ' %}
+    {% endif %}
+    {% set item = item.setLinkAttributes({class: item.linkAttributes.class|default('') ~ class}) %}
+    {{ parent() }}
+{% endblock %}
+
+{% block spanElement %}
+    {% set class = ' nav-link ' %}
+    {% if matcher.isAncestor(item) or matcher.isCurrent(item) %}
+        {% set class = class ~ ' active ' %}
+    {% endif %}
+    {% set item = item.setLinkAttributes({class: item.linkAttributes.class|default('') ~ class}) %}
+    {% import _self as knp_menu %}<a href="{{ item.uri|default('#') }}"{{ knp_menu.attributes(item.linkAttributes) }}>{{ block('label') }}</a>
+{% endblock %}
+
+{% block label %}
+    {% if item.extras.icon|default %}<i class="nav-icon {{ item.extras.icon }}"></i>{% endif %}
+    <p>
+        {{ parent() }}
+        {% if item.hasChildren and item.displayChildren %}
+            <i class="right fas fa-angle-left"></i>
+        {% endif %}
+    </p>
+
+    {% if item.extras.badge|default %}
+        <span class="{{ item.extras.badge.icon }}">{{ item.extras.badge.data }}</span>
+    {% endif %}
+{% endblock %}

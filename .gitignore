@@ -1,0 +1,5 @@
+/phpstan.neon
+/.*.cache
+/composer.lock
+/tmp
+/vendor

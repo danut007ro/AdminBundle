@@ -1,0 +1,72 @@
+{% extends '@DGAdmin/formatter/formatter.html.twig' %}
+
+{% block container_begin %}<div class="container-fluid" data-dg-admin-table="{{ {vars: formatter.vars, formatter: {type: formatter.name, name: formatter.tableName, name_url: formatter.tableNameUrl, method: formatter.method, url: formatter.url}}|json_encode|e('html_attr') }}">{% endblock container_begin %}
+
+{% block container_header %}
+    {% block filter %}
+        {% if formatter.table.filter is not null %}
+            <div class="row">
+                <div class="col">
+                    <form data-dg-admin-table-filter name="{{ formatter.table.filter.getName() }}" method="GET" autocomplete="off">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">{{ 'Filters'|trans([], 'dg_admin') }}</h3>
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="{{ 'Toggle filters'|trans([], 'dg_admin') }}">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                {% set filter = formatter.table.filter.createView() %}
+                                {% form_theme filter '@DGAdmin/form_filter_layout.html.twig' %}
+                                {{ form_rest(filter) }}
+                            </div>
+                            <div class="card-footer">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <div>
+                                        <button type="submit" class="btn btn-primary" data-toggle="tooltip" title="{{ 'Apply filters'|trans([], 'dg_admin') }}"><i class="fas fa-filter"></i> {{ 'Apply'|trans([], 'dg_admin') }}</button>
+                                        <button type="reset" class="btn btn-secondary" data-toggle="tooltip" title="{{ 'Reset filters'|trans([], 'dg_admin') }}"><i class="fas fa-sync"></i> {{ 'Reset'|trans([], 'dg_admin') }}</button>
+                                        {{ block('batch_actions') }}
+                                    </div>
+                                    <div>
+                                        <a class="d-none filter-show" href="#">{{ 'More filters'|trans([], 'dg_admin') }}</a>
+                                        <a class="d-none filter-hide" href="#">{{ 'Less filters'|trans([], 'dg_admin') }}</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        {% endif %}
+    {% endblock filter %}
+
+    {% if not formatter.table.filter %}
+        {% block batch_actions %}
+            {% if formatter.table.batchColumn or formatter.table.batchActions|length %}
+                <div class="btn-group">
+                    <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-check"></i>
+                        {{ 'Selection'|trans([], 'dg_admin') }}
+                    </button>
+                    <div class="dropdown-menu">
+                        {% if formatter.table.batchColumn %}
+                            <a class="dropdown-item" type="button" data-dg-admin-table-batch-mode="all">{{ 'Select all'|trans([], 'dg_admin') }}</a>
+                            <a class="dropdown-item" type="button" data-dg-admin-table-batch-mode="none">{{ 'Select none'|trans([], 'dg_admin') }}</a>
+                            <a class="dropdown-item" type="button" data-dg-admin-table-batch-mode="page">{{ 'Select current page'|trans([], 'dg_admin') }}</a>
+                        {% endif %}
+                        {% if formatter.table.batchColumn and formatter.table.batchActions|length %}<div class="dropdown-divider"></div>{% endif %}
+                        {% for name, batchAction in formatter.table.batchActions %}
+                            {% block batch_action %}
+                                <button class="dropdown-item" type="button" {{ dg_admin_uiaction(batchAction.getUIAction(name, formatter)) }}>{% if batchAction.icon %}<i class="{{ batchAction.icon }}"></i> {% endif %}{{ batchAction.label|trans }}</button>
+                            {% endblock %}
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+        {% endblock batch_actions %}
+    {% endif %}
+{% endblock container_header %}
+
+{% block container_end %}</div>{% endblock container_end %}

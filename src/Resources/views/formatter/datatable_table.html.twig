@@ -1,0 +1,11 @@
+<table class="{{ parameters.class|default('table table-bordered') }}">
+    <thead>
+    <tr>
+        {% for column in columns %}
+            <th>{{ column.label|trans }}</th>
+        {% endfor %}
+    </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>

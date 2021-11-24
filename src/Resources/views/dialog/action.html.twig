@@ -1,0 +1,33 @@
+<div class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog {{ dialog_class|default('modal-sm') }}" role="document">
+        <div class="modal-content {{ content_class|default }}">
+            {% block header %}
+                <div class="modal-header">
+                    <h5 class="modal-title">{{ title|default }}</h5>
+                    {% block dismiss %}
+                        <button type="button" class="close" data-dismiss="modal" aria-label="{{ 'Cancel'|trans([], 'dg_admin') }}">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    {% endblock dismiss %}
+                </div>
+            {% endblock header %}
+            <div class="modal-body">
+                {% block body %}
+                    {{ message|default|trans }}
+                {% endblock body %}
+            </div>
+            {% block footer %}
+                <div class="modal-footer">
+                    {% block cancel %}<button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> {{ 'Cancel'|trans([], 'dg_admin') }}</button>{% endblock cancel %}
+                    {% block footer_content %}
+                        <form method="post" action="{{ url|default }}">
+                            {% if method|default is not empty %}<input type="hidden" name="_method" value="{{ method }}">{% endif %}
+                            <input type="hidden" name="_token" value="{{ csrf_token(csrf_name|default(constant('DG\\AdminBundle\\ControllerHelper::CSRF_NAME'))) }}">
+                            {% block action %}<button type="submit" class="btn btn-success"><i class="fas fa-check"></i> {{ 'OK'|trans([], 'dg_admin') }}</button>{% endblock action %}
+                        </form>
+                    {% endblock footer_content %}
+                </div>
+            {% endblock footer %}
+        </div>
+    </div>
+</div>
