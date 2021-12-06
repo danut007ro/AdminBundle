@@ -116,3 +116,7 @@ Specify if should use output walkers when counting (total and filtered) using th
 ### count_fetch_join_collection `bool`, default: false
 
 Specify if should fetch join collection when counting (total and filtered) using the default [Doctrine Paginator](https://www.doctrine-project.org/projects/doctrine-orm/en/2.9/tutorials/pagination.html).
+
+### force_apply_filters `bool`, default: false
+
+Specify if should apply filters even if no request is submitted with filters.

@@ -74,6 +74,7 @@ class ORMAdapter extends AbstractAdapter implements CRUDAdapterInterface
                 'count_distinct' => false,
                 'count_output_walker' => true,
                 'count_fetch_join_collection' => false,
+                'force_apply_filters' => false,
             ])
             ->setAllowedTypes('entity', ['null', 'string'])
             ->setAllowedTypes('entity_alias', 'string')
@@ -90,6 +91,7 @@ class ORMAdapter extends AbstractAdapter implements CRUDAdapterInterface
             ->setAllowedTypes('count_distinct', 'bool')
             ->setAllowedTypes('count_output_walker', 'bool')
             ->setAllowedTypes('count_fetch_join_collection', 'bool')
+            ->setAllowedTypes('force_apply_filters', 'bool')
             ->setInfo('entity', 'Entity class to use for repository. Mandatory if "query_builder" is not specified or using `read()` method.')
             ->setInfo('entity_alias', 'Entity alias to use when creating QueryBuilder.')
             ->setInfo('query_builder', 'Query builder to use when retrieving results. If `entity` options is specified then the callable will receive initial QueryBuilder built from the repository.')
@@ -105,6 +107,7 @@ class ORMAdapter extends AbstractAdapter implements CRUDAdapterInterface
             ->setInfo('count_distinct', 'Specify if should apply DISTINCT clause when counting.')
             ->setInfo('count_output_walker', 'Specify if should use OutputWalker when counting.')
             ->setInfo('count_fetch_join_collection', 'Specify if should use fetch join collection when counting.')
+            ->setInfo('force_apply_filters', 'Apply filters even if filters request isn\'t submitted.')
         ;
     }
 
@@ -119,12 +122,21 @@ class ORMAdapter extends AbstractAdapter implements CRUDAdapterInterface
         }
 
         // Apply filters.
-        if (null !== $filter && $filter->isSubmitted()) {
-            if (!$filter->isValid()) {
-                return new ArrayDataResult([], $totalCount, 0);
+        if (null !== $filter) {
+            $applyFilters = false;
+            if ($filter->isSubmitted()) {
+                if (!$filter->isValid()) {
+                    return new ArrayDataResult([], $totalCount, 0);
+                }
+
+                $applyFilters = true;
+            } elseif ($this->options['force_apply_filters']) {
+                $applyFilters = true;
             }
 
-            $this->filterBuilderUpdater->addFilterConditions($filter, $qb);
+            if ($applyFilters) {
+                $this->filterBuilderUpdater->addFilterConditions($filter, $qb);
+            }
         }
 
         $offset = $request->getOffset();
