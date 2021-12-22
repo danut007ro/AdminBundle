@@ -117,8 +117,12 @@ class ORMAdapter extends AbstractAdapter implements CRUDAdapterInterface
 
         $totalCount = null;
         if (TableRequest::TOTAL_ALL === $request->getTotal()) {
-            // Calculate total count without applying filters.
-            $totalCount = $this->calculateTotalCount($qb, $request);
+            // Calculate total count applying default filters.
+            $qbTotal = clone $qb;
+            if (null !== $filter && $this->options['force_apply_filters']) {
+                $this->filterBuilderUpdater->addFilterConditions($filter, $qbTotal);
+            }
+            $totalCount = $this->calculateTotalCount($qbTotal, $request);
         }
 
         // Apply filters.

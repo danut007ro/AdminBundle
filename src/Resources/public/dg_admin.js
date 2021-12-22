@@ -16,14 +16,20 @@ require('admin-lte/build/js/AdminLTE')
   // Custom conditionize.actions.show to show parent if has .form-group class.
   conditionizeActionShow = $.fn.conditionize.actions.show;
   $.fn.conditionize.actions.show = $section => {
-    const $parent = $section.parent();
+    let $parent = $section.parent();
+    if ($parent && !$parent.hasClass('form-group')) {
+      $parent = $parent.parent();
+    }
     conditionizeActionShow($parent && $parent.hasClass('form-group') ? $parent : $section);
   }
 
   // Custom conditionize.actions.hide to hide parent if has .form-group class.
   conditionizeActionHide = $.fn.conditionize.actions.hide;
   $.fn.conditionize.actions.hide = $section => {
-    const $parent = $section.parent();
+    let $parent = $section.parent();
+    if ($parent && !$parent.hasClass('form-group')) {
+      $parent = $parent.parent();
+    }
     conditionizeActionHide($parent && $parent.hasClass('form-group') ? $parent : $section);
   }
 
@@ -161,6 +167,15 @@ require('admin-lte/build/js/AdminLTE')
                     }
                   }
                 }
+              }
+
+              for (let [key, value] of data.entries()) {
+                let el = form.querySelector('[name="' + CSS.escape(value['name']) + '"]');
+                if (!el || !el.dataset['dgAdminDatepicker']) {
+                  continue;
+                }
+
+                value.value = getDatePickerValue(el);
               }
 
               // Disable submit button. It will be "enabled" (overwritten) with ajax response.
@@ -999,13 +1014,14 @@ require('admin-lte/build/js/AdminLTE')
       datePicker.value += document.body._dgAdminInit.daterangepicker.locale.separator + moment(parts[1]).format(settings.locale.format);
     }
 
-    if (!settings.singleDatePicker) {
-      // Convert ranges with moment().
-      settings.ranges = document.body._dgAdminInit.daterangepicker.defaultRanges;
-      for ([key, value] of Object.entries(settings.ranges)) {
+    // Convert ranges with moment() only once.
+    if (!document.body._dgAdminInit.daterangepicker.initDefaultRanges) {
+      for ([key, value] of Object.entries(document.body._dgAdminInit.daterangepicker.defaultRanges)) {
         value[0] = eval('moment()' + (value[0] !== '' ? '.' + value[0] : ''));
         value[1] = eval('moment()' + (value[1] !== '' ? '.' + value[1] : ''));
       }
+
+      document.body._dgAdminInit.daterangepicker.initDefaultRanges = true;
     }
 
     $.fn.daterangepicker.defaultOptions = document.body._dgAdminInit.daterangepicker;
@@ -1028,6 +1044,20 @@ require('admin-lte/build/js/AdminLTE')
       });
 
     return this;
+  }
+
+  function getDatePickerValue(el) {
+    if (el.value) {
+      const daterangepicker = $(el).data('daterangepicker');
+      value = daterangepicker.startDate.format();
+      if (!daterangepicker.singleDatePicker) {
+        value += '>' + daterangepicker.endDate.endOf('minute').format();
+      }
+    } else {
+      value = '';
+    }
+
+    return value;
   }
 
   function initializeTable(table) {
@@ -1238,15 +1268,7 @@ require('admin-lte/build/js/AdminLTE')
 
       // Convert value of daterangepicker.
       if (el.dataset['dgAdminDatepicker']) {
-        if (el.value) {
-          const daterangepicker = $(el).data('daterangepicker');
-          value = daterangepicker.startDate.format();
-          if (!daterangepicker.singleDatePicker) {
-            value += '>' + daterangepicker.endDate.endOf('minute').format();
-          }
-        } else {
-          value = '';
-        }
+        value = getDatePickerValue(el);
       }
 
       // If removing empty, we need to ignore params with no value or hidden.
