@@ -5,11 +5,9 @@ declare(strict_types=1);
 namespace DG\AdminBundle\Form\Type;
 
 use DG\AdminBundle\DateFormat\DateFormats;
-use Doctrine\ORM\Query\Expr\Comparison;
-use Lexik\Bundle\FormFilterBundle\Event\GetFilterConditionEvent;
+use Lexik\Bundle\FormFilterBundle\Filter\Condition\ConditionInterface;
 use Lexik\Bundle\FormFilterBundle\Filter\Doctrine\DBALQuery;
 use Lexik\Bundle\FormFilterBundle\Filter\Doctrine\ORMQuery;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Exception\TransformationFailedException;
@@ -20,7 +18,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-final class DateRangePickerType extends AbstractType implements EventSubscriberInterface
+final class DateRangePickerType extends AbstractType
 {
     private const SEPARATOR = '>';
 
@@ -29,14 +27,6 @@ final class DateRangePickerType extends AbstractType implements EventSubscriberI
     public function __construct(DateFormats $format)
     {
         $this->format = $format;
-    }
-
-    public static function getSubscribedEvents()
-    {
-        return [
-            'lexik_form_filter.apply.orm.date_range_picker' => ['filter'],
-            'lexik_form_filter.apply.dbal.date_range_picker' => ['filter'],
-        ];
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -105,6 +95,18 @@ final class DateRangePickerType extends AbstractType implements EventSubscriberI
                 'picker' => [],
                 'model_timezone' => null,
                 'view_timezone' => null,
+                'apply_filter' => function ($query, string $field, array $values): ?ConditionInterface {
+                    /** @var DBALQuery|ORMQuery $query */
+                    if (null === $value = $values['value']) {
+                        return null;
+                    }
+
+                    if (!isset($value[0]) || !isset($value[1])) {
+                        return null;
+                    }
+
+                    return $query->createCondition((string) $query->getExpressionBuilder()->dateTimeInRange($field, $value[0], $value[1]));
+                },
             ])
             ->setAllowedTypes('picker', 'array')
         ;
@@ -132,19 +134,5 @@ final class DateRangePickerType extends AbstractType implements EventSubscriberI
     public function getParent(): string
     {
         return TextType::class;
-    }
-
-    public function filter(GetFilterConditionEvent $event): void
-    {
-        /** @var DBALQuery|ORMQuery $query */
-        $query = $event->getFilterQuery();
-        $expr = $query->getExpressionBuilder();
-        $values = $event->getValues();
-        $value = $values['value'];
-
-        if (isset($value[0]) || isset($value[1])) {
-            $condition = $expr->dateTimeInRange($event->getField(), $value[0], $value[1]);
-            $event->setCondition($condition instanceof Comparison ? $condition->__toString() : $condition);
-        }
     }
 }
