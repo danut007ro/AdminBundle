@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  */
 final class CloseDialogResponse extends JsonResponse
 {
-    protected function update(): self
+    protected function update(): static
     {
         ResponseUpdater::closeDialog($this);
         parent::update();

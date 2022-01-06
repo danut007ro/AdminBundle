@@ -11,6 +11,8 @@ use Symfony\Component\Form\Extension\Core\DataTransformer\ChoiceToValueTransform
 
 /**
  * This is basically ChoiceToValueTransformer but also allows adding choices.
+ *
+ * @template-implements DataTransformerInterface<mixed, mixed>
  */
 abstract class AbstractChoiceToValueTransformer implements DataTransformerInterface
 {
@@ -38,16 +40,29 @@ abstract class AbstractChoiceToValueTransformer implements DataTransformerInterf
         return $this;
     }
 
-    public function transform(mixed $value): mixed
+    /**
+     * @param mixed $value
+     *
+     * @return mixed
+     */
+    public function transform($value)
     {
         return $this->buildTransformer()->transform($value);
     }
 
-    public function reverseTransform(mixed $value): mixed
+    /**
+     * @param mixed $value
+     *
+     * @return mixed
+     */
+    public function reverseTransform($value)
     {
         return $this->buildTransformer()->reverseTransform($value);
     }
 
+    /**
+     * @return DataTransformerInterface<mixed, mixed>
+     */
     protected function buildTransformer(): DataTransformerInterface
     {
         $choiceList = $this->buildChoiceList();

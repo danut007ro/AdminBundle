@@ -19,13 +19,13 @@ final class RedirectResponse extends BaseRedirectResponse
         parent::__construct($url, $status, $headers);
     }
 
-    public function setStatusCode(int $code, string $text = null): BaseRedirectResponse
+    public function setStatusCode(int $code, string $text = null): static
     {
         // Always set 200 status code, since the redirect will be handled by our javascript.
         return parent::setStatusCode(200);
     }
 
-    public function setTargetUrl(string $url): BaseRedirectResponse
+    public function setTargetUrl(string $url): static
     {
         ResponseUpdater::redirect($this);
 

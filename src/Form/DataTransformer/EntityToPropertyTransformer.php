@@ -12,6 +12,9 @@ use Symfony\Component\Form\Exception\TransformationFailedException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
+/**
+ * @template-implements DataTransformerInterface<mixed, mixed>
+ */
 class EntityToPropertyTransformer implements DataTransformerInterface
 {
     protected PropertyAccessorInterface $propertyAccessor;
