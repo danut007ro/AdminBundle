@@ -73,7 +73,7 @@ This callback will be called after retrieving `Query` from `QueryBuilder`. It ca
 
 This option sets the mapping between displayed columns and queried columns. It can be used to sort by a column from joined table.
 
-### search_columns `string[]`, default: []
+### search_columns `string[] | callable(QueryBuilder $qb, string $search)`, default: []
 
 This option specifies what columns should be used for global searching. The query is `LIKE search%`.
 

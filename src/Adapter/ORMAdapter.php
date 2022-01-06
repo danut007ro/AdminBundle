@@ -81,7 +81,7 @@ class ORMAdapter extends AbstractAdapter implements CRUDAdapterInterface
             ->setAllowedTypes('query_builder', ['null', QueryBuilder::class, 'callable'])
             ->setAllowedTypes('query', ['null', 'callable'])
             ->setAllowedTypes('order_by', 'string[]')
-            ->setAllowedTypes('search_columns', 'string[]')
+            ->setAllowedTypes('search_columns', ['string[]', 'callable'])
             ->setAllowedTypes('batch_column_id', ['null', 'string'])
             ->setAllowedTypes('batch_column_id_as_uuid', 'bool')
             ->setAllowedTypes('iterate', 'bool')
@@ -290,16 +290,20 @@ class ORMAdapter extends AbstractAdapter implements CRUDAdapterInterface
             }
         }
 
-        if ('' !== $request->getSearch() && \count($this->options['search_columns']) > 0) {
-            $expr = [];
-            foreach ($this->options['search_columns'] as $column) {
-                $expr[] = $queryBuilder->expr()->like($column, ':_dgAdminSearch');
-            }
+        if ('' !== $request->getSearch()) {
+            if (\is_callable($this->options['search_columns'])) {
+                $this->options['search_columns']($queryBuilder, $request->getSearch());
+            } elseif (\count($this->options['search_columns']) > 0) {
+                $expr = [];
+                foreach ($this->options['search_columns'] as $column) {
+                    $expr[] = $queryBuilder->expr()->like($column, ':_dgAdminSearch');
+                }
 
-            $queryBuilder
-                ->andWhere($queryBuilder->expr()->orX(...$expr))
-                ->setParameter('_dgAdminSearch', $request->getSearch().'%')
-            ;
+                $queryBuilder
+                    ->andWhere($queryBuilder->expr()->orX(...$expr))
+                    ->setParameter('_dgAdminSearch', $request->getSearch().'%')
+                ;
+            }
         }
 
         return $queryBuilder;
