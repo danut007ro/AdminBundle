@@ -58,23 +58,23 @@ Every entry can be translated using `date_ranges.[key]` from `dg_admin` domain f
 ```yaml
     date_ranges:
         today:
-            start: ''
-            end: ''
+            start: startOf('day')
+            end: endOf('day')
         yesterday:
-            start: subtract(1, 'days')
-            end: subtract(1, 'days')
+            start: subtract(1, 'days').startOf('day')
+            end: subtract(1, 'days').endOf('day')
         last_7_days:
-            start: subtract(6, 'days')
-            end: ''
+            start: subtract(6, 'days').startOf('day')
+            end: endOf('day')
         last_30_days:
-            start: subtract(29, 'days')
-            end: ''
+            start: subtract(29, 'days').startOf('day')
+            end: endOf('day')
         this_month:
-            start: startOf('month')
-            end: endOf('month')
+            start: startOf('month').startOf('day')
+            end: endOf('month').endOf('day')
         last_month:
-            start: subtract(1, 'month').startOf('month')
-            end: subtract(1, 'month').endOf('month')
+            start: subtract(1, 'month').startOf('month').startOf('day')
+            end: subtract(1, 'month').endOf('month').endOf('day')
 ```
 
 ### date_formats

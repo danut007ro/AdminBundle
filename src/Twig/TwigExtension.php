@@ -77,7 +77,7 @@ class TwigExtension extends AbstractExtension
             'init' => [
                 'daterangepicker' => [
                     'autoUpdateInput' => false,
-                    'defaultRanges' => $dateRanges,
+                    'ranges' => $dateRanges,
                     'locale' => [
                         'applyLabel' => $this->translator->trans('Apply', [], 'dg_admin'),
                         'cancelLabel' => $this->translator->trans('Clear', [], 'dg_admin'),

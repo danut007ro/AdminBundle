@@ -175,7 +175,7 @@ require('admin-lte/build/js/AdminLTE')
                   continue;
                 }
 
-                value.value = getDatePickerValue(el);
+                value.value = this.getDatePickerValue(el);
               }
 
               // Disable submit button. It will be "enabled" (overwritten) with ajax response.
@@ -473,6 +473,20 @@ require('admin-lte/build/js/AdminLTE')
       }
 
       return unescape(urlSearchParams.toString());
+    }
+
+    getDatePickerValue(el) {
+      if (el.value) {
+        const daterangepicker = $(el).data('daterangepicker');
+        value = daterangepicker.startDate.format();
+        if (!daterangepicker.singleDatePicker) {
+          value += '>' + daterangepicker.endDate.endOf('minute').format();
+        }
+      } else {
+        value = '';
+      }
+
+      return value;
     }
   }
 
@@ -1015,13 +1029,13 @@ require('admin-lte/build/js/AdminLTE')
     }
 
     // Convert ranges with moment() only once.
-    if (!document.body._dgAdminInit.daterangepicker.initDefaultRanges) {
-      for ([key, value] of Object.entries(document.body._dgAdminInit.daterangepicker.defaultRanges)) {
+    if (!document.body._dgAdminInit.daterangepicker.initRanges) {
+      for ([key, value] of Object.entries(document.body._dgAdminInit.daterangepicker.ranges)) {
         value[0] = eval('moment()' + (value[0] !== '' ? '.' + value[0] : ''));
         value[1] = eval('moment()' + (value[1] !== '' ? '.' + value[1] : ''));
       }
 
-      document.body._dgAdminInit.daterangepicker.initDefaultRanges = true;
+      document.body._dgAdminInit.daterangepicker.initRanges = true;
     }
 
     $.fn.daterangepicker.defaultOptions = document.body._dgAdminInit.daterangepicker;
@@ -1044,20 +1058,6 @@ require('admin-lte/build/js/AdminLTE')
       });
 
     return this;
-  }
-
-  function getDatePickerValue(el) {
-    if (el.value) {
-      const daterangepicker = $(el).data('daterangepicker');
-      value = daterangepicker.startDate.format();
-      if (!daterangepicker.singleDatePicker) {
-        value += '>' + daterangepicker.endDate.endOf('minute').format();
-      }
-    } else {
-      value = '';
-    }
-
-    return value;
   }
 
   function initializeTable(table) {
@@ -1268,7 +1268,7 @@ require('admin-lte/build/js/AdminLTE')
 
       // Convert value of daterangepicker.
       if (el.dataset['dgAdminDatepicker']) {
-        value = getDatePickerValue(el);
+        value = window.DGAdmin.getDatePickerValue(el);
       }
 
       // If removing empty, we need to ignore params with no value or hidden.
