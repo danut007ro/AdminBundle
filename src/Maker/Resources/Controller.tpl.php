@@ -53,7 +53,7 @@ class <?= $class_name; ?> extends <?= $parent_class_name; ?><?= "\n"; ?>
      * @Route("/", name="<?= $list_route; ?>", methods={"GET", "POST"})
      */
 <?php } ?>
-    public function list(Request $request): array | Response
+    public function list(Request $request): array|Response
     {
         $result = $this->tableHelper->handleRequest($request, [
             $this->tableHelper->createDefaultFormatter(
