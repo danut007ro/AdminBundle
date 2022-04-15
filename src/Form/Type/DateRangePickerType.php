@@ -38,9 +38,13 @@ final class DateRangePickerType extends AbstractType
         );
 
         $builder->addModelTransformer(new CallbackTransformer(
-            static function ($dates) use ($transformer): string {
+            static function ($dates) use ($transformer, $options): string {
                 if (null === $dates || '' === $dates) {
                     return '';
+                }
+
+                if ($singleDatePicker = $options['picker']['singleDatePicker'] ?? false) {
+                    $dates = [$dates, $dates];
                 }
 
                 if (!\is_array($dates) || 2 !== \count($dates) || !$dates[0] instanceof \DateTimeInterface || !$dates[1] instanceof \DateTimeInterface) {
@@ -49,21 +53,31 @@ final class DateRangePickerType extends AbstractType
 
                 /** @var string $from */
                 $from = $transformer->transform($dates[0]);
+
+                if ($singleDatePicker) {
+                    return $from;
+                }
+
                 /** @var string $to */
                 $to = $transformer->transform($dates[1]);
+
                 if ('' === $from || '' === $to) {
                     return '';
                 }
 
                 return $from.self::SEPARATOR.$to;
             },
-            static function ($value) use ($transformer): ?array {
+            static function ($value) use ($transformer, $options): array|null|\DateTimeInterface {
                 if (null === $value || '' === $value) {
                     return null;
                 }
 
                 if (!\is_string($value)) {
                     throw new TransformationFailedException('Expected a string.');
+                }
+
+                if ($singleDatePicker = $options['picker']['singleDatePicker'] ?? false) {
+                    $value .= self::SEPARATOR.$value;
                 }
 
                 $parts = explode(self::SEPARATOR, $value, 2);
@@ -73,6 +87,10 @@ final class DateRangePickerType extends AbstractType
 
                 if (null === ($from = $transformer->reverseTransform($parts[0]))) {
                     throw new TransformationFailedException('Unable to transform FROM date.');
+                }
+
+                if ($singleDatePicker) {
+                    return $from;
                 }
 
                 if (null === ($to = $transformer->reverseTransform($parts[1]))) {
